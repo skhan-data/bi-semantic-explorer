@@ -1,0 +1,39 @@
+{
+  "name": "Test Model",
+  "tables": [
+    {
+      "name": "Sales",
+      "description": "",
+      "columns": [
+        {
+          "name": "Amount",
+          "dataType": "Decimal",
+          "description": ""
+        }
+      ],
+      "measures": [
+        {
+          "name": "Total Sales",
+          "expression": "SUM(Sales[Amount])",
+          "description": "",
+          "formatString": "",
+          "dependencies": {
+            "measures": [],
+            "columns": []
+          },
+          "aiExplanation": "Aggregates values using a summation pattern."
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "fromTable": "Sales",
+      "fromColumn": "DateKey",
+      "toTable": "Date",
+      "toColumn": "DateKey",
+      "crossFilteringBehavior": "oneWay"
+    }
+  ],
+  "reports": []
+}

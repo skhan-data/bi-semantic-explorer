@@ -1,0 +1,383 @@
+{
+  "name": "test",
+  "tables": [
+    {
+      "name": "bank_transactions_data_2",
+      "description": "",
+      "columns": [
+        {
+          "name": "TransactionID",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "AccountID",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "TransactionAmount",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "TransactionDate",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "TransactionType",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Location",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "DeviceID",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "IP Address",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "MerchantID",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Channel",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "CustomerAge",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "CustomerOccupation",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "TransactionDuration",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "LoginAttempts",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "AccountBalance",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "PreviousTransactionDate",
+          "dataType": "Unknown",
+          "description": ""
+        }
+      ],
+      "measures": []
+    },
+    {
+      "name": "DateTableTemplate_9fbcab87-d6ff-4439-a47a-59a55b4e5f95",
+      "description": "",
+      "columns": [
+        {
+          "name": "Date",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Year = YEAR([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "MonthNo = MONTH([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Month = FORMAT([Date], \"MMMM\")",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "QuarterNo = INT(([MonthNo] + 2) / 3)",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Quarter = \"Qtr \" & [QuarterNo]",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Day = DAY([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        }
+      ],
+      "measures": []
+    },
+    {
+      "name": "financials",
+      "description": "",
+      "columns": [
+        {
+          "name": "Segment",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Country",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Product",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Discount Band",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Units Sold",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Manufacturing Price",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Sale Price",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Gross Sales",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Discounts",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Sales",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "COGS",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Profit",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Date",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Month Number",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Month Name",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Year",
+          "dataType": "Unknown",
+          "description": ""
+        }
+      ],
+      "measures": [
+        {
+          "name": "Measure",
+          "expression": "COUNT(financials[Country])\nformatString: 0\nlineageTag: e00d939f-0c72-4aa0-9b66-76d11253a0d9",
+          "description": "",
+          "formatString": "",
+          "dependencies": {
+            "measures": [],
+            "columns": []
+          },
+          "aiExplanation": "Calculates values using: COUNT(financials[Country])..."
+        }
+      ]
+    },
+    {
+      "name": "LocalDateTable_0d0537a1-6338-41f0-b2e1-0526583c6417",
+      "description": "",
+      "columns": [
+        {
+          "name": "Date",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Year = YEAR([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "MonthNo = MONTH([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Month = FORMAT([Date], \"MMMM\")",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "QuarterNo = INT(([MonthNo] + 2) / 3)",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Quarter = \"Qtr \" & [QuarterNo]",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Day = DAY([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        }
+      ],
+      "measures": []
+    },
+    {
+      "name": "LocalDateTable_4c592c1f-ec28-41ee-be53-31bbdb68ae2d",
+      "description": "",
+      "columns": [
+        {
+          "name": "Date",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Year = YEAR([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "MonthNo = MONTH([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Month = FORMAT([Date], \"MMMM\")",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "QuarterNo = INT(([MonthNo] + 2) / 3)",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Quarter = \"Qtr \" & [QuarterNo]",
+          "dataType": "Unknown",
+          "description": ""
+        },
+        {
+          "name": "Day = DAY([Date])",
+          "dataType": "Unknown",
+          "description": ""
+        }
+      ],
+      "measures": []
+    }
+  ],
+  "relationships": [
+    {
+      "fromTable": "bank_transactions_data_2",
+      "fromColumn": "TransactionDate",
+      "toTable": "LocalDateTable_4c592c1f-ec28-41ee-be53-31bbdb68ae2d",
+      "toColumn": "Date",
+      "crossFilteringBehavior": "oneWay"
+    },
+    {
+      "fromTable": "bank_transactions_data_2",
+      "fromColumn": "PreviousTransactionDate",
+      "toTable": "LocalDateTable_0d0537a1-6338-41f0-b2e1-0526583c6417",
+      "toColumn": "Date",
+      "crossFilteringBehavior": "oneWay"
+    },
+    {
+      "fromTable": "financials",
+      "fromColumn": "Date",
+      "toTable": "bank_transactions_data_2",
+      "toColumn": "TransactionDate",
+      "crossFilteringBehavior": "oneWay"
+    }
+  ],
+  "reports": [
+    {
+      "name": "test",
+      "pages": [
+        {
+          "name": "Page 1",
+          "visuals": [
+            {
+              "type": "tableEx",
+              "title": "tableEx visual",
+              "usedMeasures": [
+                "Manufacturing Price",
+                "Gross Sales",
+                "Discounts"
+              ],
+              "usedColumns": [
+                "Manufacturing Price",
+                "Gross Sales",
+                "Discounts"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Page 2",
+          "visuals": [
+            {
+              "type": "clusteredColumnChart",
+              "title": "clusteredColumnChart visual",
+              "usedMeasures": [
+                "Gross Sales",
+                "Discounts"
+              ],
+              "usedColumns": [
+                "Gross Sales",
+                "Discounts"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

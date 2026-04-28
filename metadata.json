@@ -1,0 +1,5 @@
+{
+  "name": "Power BI Semantic Explorer",
+  "description": "An AI-powered documentation and lineage tool for Power BI Semantic Models. Supports local extraction via Python for offline use.",
+  "requestFramePermissions": []
+}

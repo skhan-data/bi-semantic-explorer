@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-secondary: var(--secondary);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --font-sans: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+/* ============================================
+   DACORUM BOROUGH COUNCIL DESIGN SYSTEM
+   ============================================ */
+
+/* --- Light Theme (Original) --- */
+:root {
+  --primary: #10b981;          /* Emerald 500 */
+  --primary-foreground: #ffffff;
+  --accent: #0ea5e9;           /* Sky 500 */
+  --cta: #10b981;
+
+  --background: #f8fafc;       /* Slate 50 */
+  --foreground: #0f172a;       /* Slate 900 */
+  --card: #ffffff;
+  --border: #e2e8f0;           /* Slate 200 */
+  --secondary: #f1f5f9;        /* Slate 100 */
+  --muted-foreground: #64748b; /* Slate 500 */
+}
+
+/* --- Dark Theme (Original) --- */
+.dark {
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
+  --accent: #38bdf8;           /* Sky 400 */
+  --cta: #10b981;
+
+  --background: #020617;       /* Slate 950 */
+  --foreground: #f8fafc;       /* Slate 50 */
+  --card: #0f172a;             /* Slate 900 */
+  --border: #1e293b;           /* Slate 800 */
+  --secondary: #1e293b;        /* Slate 800 */
+  --muted-foreground: #94a3b8; /* Slate 400 */
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+body {
+  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Code Highlighting */
+pre[class*="language-"] {
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+code[class*="language-"] {
+  text-shadow: none !important;
+  color: #e0e0e0 !important;
+}
+.token.function { color: #61afef !important; }
+.token.string { color: #98c379 !important; }
+.token.keyword { color: #c678dd !important; }
+.token.operator { color: #56b6c2 !important; }
+.token.punctuation { color: #abb2bf !important; }

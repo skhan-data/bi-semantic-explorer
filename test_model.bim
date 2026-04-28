@@ -1,0 +1,30 @@
+{
+  "model": {
+    "name": "Test Model",
+    "tables": [
+      {
+        "name": "Sales",
+        "columns": [
+          {
+            "name": "Amount",
+            "dataType": "Decimal"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Sales",
+            "expression": "SUM(Sales[Amount]) // This is a test description"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "fromTable": "Sales",
+        "fromColumn": "DateKey",
+        "toTable": "Date",
+        "toColumn": "DateKey"
+      }
+    ]
+  }
+}
