@@ -5,7 +5,7 @@ FROM node:20-bullseye-slim
 # Python is needed for pbi_extractor.py
 # Git is needed for the 'Clone Repository' feature
 RUN apt-get update && \
-    apt-get install -y python3 git && \
+    apt-get install -y python3 python-is-python3 git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
