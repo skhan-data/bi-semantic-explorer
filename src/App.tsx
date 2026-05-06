@@ -37,7 +37,7 @@ import { SimpleExplorer } from './components/SimpleExplorer';
 
 export default function App() {
   const [model, setModel] = useState<PBIModel>({ name: 'New Model', tables: [], relationships: [] });
-  const [activeTab, setActiveTab] = useState<'overview' | 'explorer' | 'reports' | 'compare'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'explorer' | 'reports' | 'relationships' | 'compare'>('overview');
   const [explorerMode, setExplorerMode] = useState<'measures' | 'columns'>('measures');
   const [selectedItem, setSelectedItem] = useState<PBIMeasure | PBIColumn | null>(null);
   const [bulkSelection, setBulkSelection] = useState<any[]>([]);
@@ -607,6 +607,20 @@ export default function App() {
                 )}
 
 
+
+                {activeTab === 'relationships' && (
+                  <div className="h-full bg-card border border-border p-8 flex flex-col gap-6">
+                    <div className="flex items-center justify-between border-b border-border pb-4">
+                      <div>
+                        <h2 className="text-2xl font-bold">Model Relationships</h2>
+                        <p className="text-sm text-muted-foreground mt-1">A simple, tabular matrix showing all 1:Many and Many:Many links.</p>
+                      </div>
+                    </div>
+                    <div className="flex-1 overflow-auto">
+                      <RelationshipMatrix model={model} />
+                    </div>
+                  </div>
+                )}
 
                 {activeTab === 'compare' && (
                   <div className="h-full">

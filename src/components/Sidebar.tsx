@@ -45,8 +45,8 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, count, badge }: Sideb
 );
 
 interface SidebarProps {
-  activeTab: 'overview' | 'explorer' | 'reports' | 'compare';
-  setActiveTab: (tab: 'overview' | 'explorer' | 'reports' | 'compare') => void;
+  activeTab: 'overview' | 'explorer' | 'reports' | 'relationships' | 'compare';
+  setActiveTab: (tab: 'overview' | 'explorer' | 'reports' | 'relationships' | 'compare') => void;
   tableCount: number;
   explorerCount: number;
   reportCount: number;
@@ -108,6 +108,12 @@ export const Sidebar = ({
             active={activeTab === 'reports'} 
             onClick={() => setActiveTab('reports')} 
             count={reportCount}
+          />
+          <SidebarItem 
+            icon={GitBranch} 
+            label={viewMode === 'simple' ? 'Connections' : 'Relationships'}
+            active={activeTab === 'relationships'} 
+            onClick={() => setActiveTab('relationships')} 
           />
 
           {viewMode === 'technical' && (
