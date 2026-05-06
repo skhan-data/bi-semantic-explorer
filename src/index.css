@@ -10,80 +10,70 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
-  --font-sans: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+  --font-sans: 'GDS Transport', Arial, sans-serif;
 }
 
 /* ============================================
-   DACORUM BOROUGH COUNCIL DESIGN SYSTEM
+   GOV.UK / CORPORATE DESIGN SYSTEM
    ============================================ */
 
-/* --- Light Theme (Original) --- */
 :root {
-  --primary: #10b981;          /* Emerald 500 */
+  --primary: #00703c;          /* GOV.UK Green */
   --primary-foreground: #ffffff;
-  --accent: #0ea5e9;           /* Sky 500 */
-  --cta: #10b981;
+  --accent: #1d70b8;           /* GOV.UK Blue */
+  --cta: #00703c;
 
-  --background: #f8fafc;       /* Slate 50 */
-  --foreground: #0f172a;       /* Slate 900 */
+  --background: #f3f2f1;       /* GOV.UK Light Grey */
+  --foreground: #0b0c0c;       /* GOV.UK Black */
   --card: #ffffff;
-  --border: #e2e8f0;           /* Slate 200 */
-  --secondary: #f1f5f9;        /* Slate 100 */
-  --muted-foreground: #64748b; /* Slate 500 */
+  --border: #b1b4b6;           /* GOV.UK Mid Grey */
+  --secondary: #ffffff;
+  --muted-foreground: #505a5f; /* GOV.UK Dark Grey */
 }
 
-/* --- Dark Theme (Original) --- */
-.dark {
-  --primary: #10b981;
-  --primary-foreground: #ffffff;
-  --accent: #38bdf8;           /* Sky 400 */
-  --cta: #10b981;
-
-  --background: #020617;       /* Slate 950 */
-  --foreground: #f8fafc;       /* Slate 50 */
-  --card: #0f172a;             /* Slate 900 */
-  --border: #1e293b;           /* Slate 800 */
-  --secondary: #1e293b;        /* Slate 800 */
-  --muted-foreground: #94a3b8; /* Slate 400 */
-}
-
-/* ============================================
-   GLOBAL STYLES
-   ============================================ */
-
+/* Force light mode styles globally */
 body {
-  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: 'GDS Transport', Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* GOV.UK strictly uses square corners for a clean, formal look */
+* {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--secondary);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: var(--muted-foreground);
 }
 
-/* Code Highlighting */
+/* Code Highlighting - Light Theme suitable for Technical Docs */
 pre[class*="language-"] {
-  background: transparent !important;
+  background: #f3f2f1 !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 1rem !important;
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--accent) !important;
 }
 code[class*="language-"] {
   text-shadow: none !important;
-  color: #e0e0e0 !important;
+  color: #0b0c0c !important;
 }
-.token.function { color: #61afef !important; }
-.token.string { color: #98c379 !important; }
-.token.keyword { color: #c678dd !important; }
-.token.operator { color: #56b6c2 !important; }
-.token.punctuation { color: #abb2bf !important; }
+.token.function { color: #1d70b8 !important; }
+.token.string { color: #00703c !important; }
+.token.keyword { color: #d4351c !important; }
+.token.operator { color: #0b0c0c !important; }
+.token.punctuation { color: #505a5f !important; }

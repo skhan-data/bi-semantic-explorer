@@ -25,7 +25,6 @@ import { DetailsPanel } from './components/DetailsPanel';
 import { ReportViewer } from './components/ReportViewer';
 import { SemanticExplorerTree } from './components/SemanticExplorerTree';
 import { BulkImpactModal } from './components/BulkImpactModal';
-import { LineageGraph, ModelSchemaGraph } from './components/LineageGraphs';
 import { ConnectHub } from './components/ConnectHub';
 import { generateAuditHtml } from './utils/auditTemplate';
 import { CommandPalette } from './components/CommandPalette';
@@ -38,12 +37,11 @@ import { SimpleExplorer } from './components/SimpleExplorer';
 
 export default function App() {
   const [model, setModel] = useState<PBIModel>({ name: 'New Model', tables: [], relationships: [] });
-  const [activeTab, setActiveTab] = useState<'overview' | 'explorer' | 'reports' | 'lineage' | 'compare'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'explorer' | 'reports' | 'compare'>('overview');
   const [explorerMode, setExplorerMode] = useState<'measures' | 'columns'>('measures');
   const [selectedItem, setSelectedItem] = useState<PBIMeasure | PBIColumn | null>(null);
   const [bulkSelection, setBulkSelection] = useState<any[]>([]);
   const [showBulkImpactModal, setShowBulkImpactModal] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [viewMode, setViewMode] = useState<'simple' | 'technical'>(
     () => (localStorage.getItem('biViewMode') as 'simple' | 'technical') || 'technical'
   );
@@ -52,7 +50,7 @@ export default function App() {
     localStorage.setItem('biViewMode', mode);
     setViewMode(mode);
     // If on a technical-only tab, redirect to overview
-    if (mode === 'simple' && ['lineage', 'compare'].includes(activeTab)) {
+    if (mode === 'simple' && ['compare'].includes(activeTab)) {
       setActiveTab('overview');
     }
   };
@@ -68,7 +66,6 @@ export default function App() {
   const [projectPath, setProjectPath] = useState('');
   const [isImported, setIsImported] = useState(false);
   const [activeReportPage, setActiveReportPage] = useState<string | null>(null);
-  const [lineageMode, setLineageMode] = useState<'field' | 'schema' | 'matrix'>('field');
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [comparisonModel, setComparisonModel] = useState<PBIModel | null>(null);
   const [isAnalyzingComparison, setIsAnalyzingComparison] = useState(false);
@@ -90,10 +87,6 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-  }, [isDarkMode]);
 
   useEffect(() => {
     Prism.highlightAll();
@@ -351,7 +344,7 @@ export default function App() {
   } as any);
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30 selection:text-foreground flex overflow-hidden dark" {...getRootProps()}>
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30 selection:text-foreground flex overflow-hidden" {...getRootProps()}>
       <input {...getInputProps()} />
 
       <AnimatePresence>
@@ -405,7 +398,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={confirmDownloadHtml}
-                  className="flex-1 px-4 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2"
                 >
                   <Upload size={16} />
                   <span>Generate Audit</span>
@@ -555,10 +548,9 @@ export default function App() {
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 setShowLocalSetup={setShowLocalSetup}
-                isDarkMode={isDarkMode}
-                setIsDarkMode={setIsDarkMode}
                 onImport={handleResetSession}
                 onDownloadHtml={handleDownloadHtml}
+                importLabel="Export Technical Docs"
                 viewMode={viewMode}
                 setViewMode={handleSetViewMode}
               />
@@ -614,57 +606,7 @@ export default function App() {
                   />
                 )}
 
-                {activeTab === 'lineage' && (
-                  <div className="h-full bg-card/30 rounded-3xl border border-border p-6 flex flex-col gap-6 relative min-h-[600px]">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 p-1 bg-secondary rounded-xl">
-                        <button
-                          onClick={() => setLineageMode('field')}
-                          className={cn(
-                            "px-4 py-1.5 rounded-lg text-xs font-bold transition-all",
-                            lineageMode === 'field' ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          Field Lineage
-                        </button>
-                        <button
-                          onClick={() => setLineageMode('schema')}
-                          className={cn(
-                            "px-4 py-1.5 rounded-lg text-xs font-bold transition-all",
-                            lineageMode === 'schema' ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          Model Schema
-                        </button>
-                        <button
-                          onClick={() => setLineageMode('matrix')}
-                          className={cn(
-                            "px-4 py-1.5 rounded-lg text-xs font-bold transition-all",
-                            lineageMode === 'matrix' ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          Relationship Matrix
-                        </button>
-                      </div>
-                      <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest flex items-center gap-2">
-                        <Info size={12} />
-                        {lineageMode === 'matrix' ? '' : 'Drag to explore • Scroll to zoom'}
-                      </div>
-                    </div>
 
-                    <div className="flex-1 bg-secondary/20 rounded-2xl overflow-hidden border border-border/50 relative">
-                      {lineageMode === 'field' ? (
-                        <LineageGraph model={model} full={true} />
-                      ) : lineageMode === 'schema' ? (
-                        <ModelSchemaGraph model={model} />
-                      ) : (
-                        <div className="p-4 overflow-auto h-full">
-                          <RelationshipMatrix model={model} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
 
                 {activeTab === 'compare' && (
                   <div className="h-full">
@@ -720,8 +662,6 @@ export default function App() {
               model={model}
               onNavigate={(tab) => setActiveTab(tab as any)}
               onSelectItem={handleSetSelectedItem}
-              isDarkMode={isDarkMode}
-              setIsDarkMode={setIsDarkMode}
             />
 
 

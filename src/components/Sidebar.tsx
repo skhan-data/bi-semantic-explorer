@@ -45,8 +45,8 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, count, badge }: Sideb
 );
 
 interface SidebarProps {
-  activeTab: 'overview' | 'explorer' | 'reports' | 'lineage' | 'compare';
-  setActiveTab: (tab: 'overview' | 'explorer' | 'reports' | 'lineage' | 'compare') => void;
+  activeTab: 'overview' | 'explorer' | 'reports' | 'compare';
+  setActiveTab: (tab: 'overview' | 'explorer' | 'reports' | 'compare') => void;
   tableCount: number;
   explorerCount: number;
   reportCount: number;
@@ -109,14 +109,7 @@ export const Sidebar = ({
             onClick={() => setActiveTab('reports')} 
             count={reportCount}
           />
-          {viewMode === 'technical' && (
-            <SidebarItem 
-              icon={GitBranch} 
-              label="Lineage" 
-              active={activeTab === 'lineage'} 
-              onClick={() => setActiveTab('lineage')} 
-            />
-          )}
+
           {viewMode === 'technical' && (
             <SidebarItem 
               icon={GitCompare} 

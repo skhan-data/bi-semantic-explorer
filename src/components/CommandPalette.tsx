@@ -13,8 +13,6 @@ interface CommandPaletteProps {
   model: PBIModel;
   onNavigate: (tab: string) => void;
   onSelectItem: (item: any) => void;
-  isDarkMode: boolean;
-  setIsDarkMode: (v: boolean) => void;
 }
 
 interface SearchResult {
@@ -27,7 +25,7 @@ interface SearchResult {
 }
 
 export const CommandPalette = ({
-  isOpen, onClose, model, onNavigate, onSelectItem, isDarkMode, setIsDarkMode
+  isOpen, onClose, model, onNavigate, onSelectItem
 }: CommandPaletteProps) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -43,7 +41,6 @@ export const CommandPalette = ({
       { id: 'act-explorer', name: 'Go to Model Explorer', category: 'action', icon: LayoutDashboard, action: () => { onNavigate('explorer'); onClose(); } },
       { id: 'act-reports', name: 'Go to Reports', category: 'action', icon: Layers, action: () => { onNavigate('reports'); onClose(); } },
       { id: 'act-lineage', name: 'Go to Lineage', category: 'action', icon: GitBranch, action: () => { onNavigate('lineage'); onClose(); } },
-      { id: 'act-theme', name: isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode', category: 'action', icon: isDarkMode ? Sun : Moon, action: () => { setIsDarkMode(!isDarkMode); onClose(); } },
     );
 
     // Tables
@@ -82,7 +79,7 @@ export const CommandPalette = ({
     });
 
     return results;
-  }, [model, isDarkMode, onNavigate, onSelectItem, onClose, setIsDarkMode]);
+  }, [model, onNavigate, onSelectItem, onClose]);
 
   // Filter results
   const filtered = useMemo(() => {

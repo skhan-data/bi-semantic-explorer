@@ -5,8 +5,6 @@ interface HeaderProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   setShowLocalSetup: (show: boolean) => void;
-  isDarkMode: boolean;
-  setIsDarkMode: (val: boolean) => void;
   onImport: () => void;
   onDownloadHtml?: () => void;
   importLabel?: string;
@@ -18,11 +16,9 @@ export const Header = ({
   searchQuery,
   setSearchQuery,
   setShowLocalSetup,
-  isDarkMode,
-  setIsDarkMode,
   onImport,
   onDownloadHtml,
-  importLabel = "Download Audit",
+  importLabel = "Export Technical Docs",
   viewMode,
   setViewMode,
 }: HeaderProps) => {
@@ -70,21 +66,10 @@ export const Header = ({
             <Code size={13} />
             Technical
           </button>
-        </div>
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          id="theme-toggle"
-          className="p-2 bg-secondary border border-border rounded-xl text-muted-foreground hover:text-primary transition-all hover:scale-110 active:scale-95"
-          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-        >
-          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
 
-
-        {onDownloadHtml && (
           <button
             onClick={() => onDownloadHtml?.()}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold shadow-none transition-all"
             title="Download Interactive HTML Audit"
           >
             <Upload size={16} />
