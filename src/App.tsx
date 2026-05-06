@@ -651,8 +651,8 @@ export default function App() {
                 {activeTab === 'compare' && (
                   <div className="h-full">
                     {!comparisonModel ? (
-                      <div className="h-full flex flex-col items-center justify-center pt-8">
-                        <div className="max-w-2xl w-full border border-border rounded-[40px] overflow-hidden backdrop-blur-xl bg-card">
+                      <div className="h-full flex flex-col items-center justify-center">
+                        <div className="w-full h-full">
                           <ConnectHub 
                             onAnalyzeZip={handleAnalyzeComparisonZip}
                             onAnalyzeGit={handleAnalyzeComparisonGit}
