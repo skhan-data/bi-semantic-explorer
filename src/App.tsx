@@ -25,6 +25,7 @@ import { DetailsPanel } from './components/DetailsPanel';
 import { ReportViewer } from './components/ReportViewer';
 import { SemanticExplorerTree } from './components/SemanticExplorerTree';
 import { BulkImpactModal } from './components/BulkImpactModal';
+import { ModelSchemaGraph } from './components/LineageGraphs';
 import { ConnectHub } from './components/ConnectHub';
 import { generateAuditHtml } from './utils/auditTemplate';
 import { CommandPalette } from './components/CommandPalette';
@@ -66,6 +67,7 @@ export default function App() {
   const [projectPath, setProjectPath] = useState('');
   const [isImported, setIsImported] = useState(false);
   const [activeReportPage, setActiveReportPage] = useState<string | null>(null);
+  const [lineageMode, setLineageMode] = useState<'schema' | 'matrix'>('schema');
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [comparisonModel, setComparisonModel] = useState<PBIModel | null>(null);
   const [isAnalyzingComparison, setIsAnalyzingComparison] = useState(false);
@@ -613,11 +615,35 @@ export default function App() {
                     <div className="flex items-center justify-between border-b border-border pb-4">
                       <div>
                         <h2 className="text-2xl font-bold">Model Relationships</h2>
-                        <p className="text-sm text-muted-foreground mt-1">A simple, tabular matrix showing all 1:Many and Many:Many links.</p>
+                        <p className="text-sm text-muted-foreground mt-1">Explore relationships via interactive diagram or tabular matrix.</p>
+                      </div>
+                      <div className="flex items-center gap-2 p-1 bg-secondary border border-border">
+                        <button
+                          onClick={() => setLineageMode('schema')}
+                          className={cn(
+                            "px-4 py-1.5 text-xs font-bold transition-all",
+                            lineageMode === 'schema' ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          Interactive Diagram
+                        </button>
+                        <button
+                          onClick={() => setLineageMode('matrix')}
+                          className={cn(
+                            "px-4 py-1.5 text-xs font-bold transition-all",
+                            lineageMode === 'matrix' ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          Matrix View
+                        </button>
                       </div>
                     </div>
                     <div className="flex-1 overflow-auto">
-                      <RelationshipMatrix model={model} />
+                      {lineageMode === 'schema' ? (
+                        <ModelSchemaGraph model={model} />
+                      ) : (
+                        <RelationshipMatrix model={model} />
+                      )}
                     </div>
                   </div>
                 )}

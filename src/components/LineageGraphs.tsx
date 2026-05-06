@@ -70,7 +70,7 @@ export const ModelSchemaGraph = ({ model }: ModelSchemaGraphProps) => {
     svg.call(zoom as any);
 
     const link = g.append("g")
-      .attr("stroke", "rgba(0, 132, 0, 0.2)")
+      .attr("stroke", "#b1b4b6")
       .selectAll("line")
       .data(links)
       .enter().append("line")
@@ -107,19 +107,19 @@ export const ModelSchemaGraph = ({ model }: ModelSchemaGraphProps) => {
       .attr("height", 50)
       .attr("x", -80)
       .attr("y", -25)
-      .attr("rx", 12)
-      .attr("fill", "#1F2122")
-      .attr("stroke", "#008400")
+      .attr("rx", 0) // GOV.UK Square corners
+      .attr("fill", "#ffffff")
+      .attr("stroke", "#1d70b8") // GOV.UK Blue
       .attr("stroke-width", 2)
-      .attr("class", "filter drop-shadow-lg");
+      .attr("class", "filter drop-shadow-sm");
 
     node.append("text")
       .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
-      .attr("fill", "#F3F2F1")
+      .attr("fill", "#0b0c0c") // GOV.UK Black
       .attr("font-size", "12px")
-      .attr("font-weight", "900")
-      .attr("class", "uppercase italic tracking-tighter")
+      .attr("font-weight", "bold")
+      .attr("class", "uppercase tracking-tighter")
       .text((d: any) => d.id);
 
     // Cardinality labels on links
@@ -127,8 +127,8 @@ export const ModelSchemaGraph = ({ model }: ModelSchemaGraphProps) => {
       .selectAll("text")
       .data(links)
       .enter().append("text")
-      .attr("fill", "rgba(0, 132, 0, 0.6)")
-      .attr("font-size", "9px")
+      .attr("fill", "#1d70b8")
+      .attr("font-size", "10px")
       .attr("font-weight", "bold")
       .attr("text-anchor", "middle")
       .text((d: any) => d.cardinality);
@@ -182,18 +182,18 @@ export const ModelSchemaGraph = ({ model }: ModelSchemaGraphProps) => {
   }, [model, expandedIds]);
 
   return (
-    <div ref={containerRef} className="w-full bg-[#0B0C0C] rounded-3xl border border-border/50 overflow-hidden relative min-h-[500px]">
+    <div ref={containerRef} className="w-full bg-secondary border border-border overflow-hidden relative min-h-[500px]">
       <div className="absolute top-6 left-6 flex flex-col gap-1 z-20">
         <div className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Technical Architecture</div>
         <div className="text-xs text-muted-foreground italic">{model.relationships.length} Active Cardinality Joins</div>
       </div>
       
-      <div className="absolute top-6 right-6 flex items-center gap-4 z-20 bg-[#1F2122]/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-border/30">
+      <div className="absolute top-6 right-6 flex items-center gap-4 z-20 bg-card px-4 py-2 border border-border">
          <span className="text-[9px] font-black text-muted-foreground uppercase flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-primary animate-pulse" />
             Interactive Map
          </span>
-         <div className="h-4 w-px bg-border/20" />
+         <div className="h-4 w-px bg-border/50" />
          <span className="text-[9px] font-black text-primary uppercase tracking-widest">DRAG TO EXPLORE • SCROLL TO ZOOM</span>
       </div>
 
@@ -334,7 +334,7 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .data(links)
       .enter().append("path")
       .attr("fill", "none")
-      .attr("stroke", (d: any) => d.type === 'logic' ? "rgba(0, 132, 0, 0.4)" : "rgba(255, 255, 255, 0.05)")
+      .attr("stroke", (d: any) => d.type === 'logic' ? "#00703c" : "#b1b4b6")
       .attr("stroke-width", (d: any) => d.type === 'logic' ? 2 : 1)
       .attr("marker-end", (d: any) => d.type === 'logic' ? "url(#arrowhead)" : "");
 
@@ -349,7 +349,7 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0,-5L10,0L0,5")
-      .attr("fill", "rgba(0, 132, 0, 0.6)");
+      .attr("fill", "#00703c");
 
     // Nodes
     const node = g.append("g")
@@ -372,9 +372,9 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
             }
          });
          
-         node.style("opacity", (n: any) => connectedIds.has(n.id) ? 1 : 0.05);
-         link.style("opacity", (l: any) => connectedLinks.has(l) ? 1 : 0.02);
-         link.style("stroke", (l: any) => connectedLinks.has(l) ? "#008400" : "rgba(255, 255, 255, 0.05)");
+         node.style("opacity", (n: any) => connectedIds.has(n.id) ? 1 : 0.2);
+         link.style("opacity", (l: any) => connectedLinks.has(l) ? 1 : 0.1);
+         link.style("stroke", (l: any) => connectedLinks.has(l) ? "#00703c" : "#b1b4b6");
          link.style("stroke-width", (l: any) => connectedLinks.has(l) ? 3 : 1);
          
          // Trigger pulse on connected links
@@ -386,7 +386,7 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .on("mouseleave", () => {
          node.style("opacity", 1);
          link.style("opacity", 1);
-         link.style("stroke", (d: any) => d.type === 'logic' ? "rgba(0, 132, 0, 0.4)" : "rgba(255, 255, 255, 0.05)");
+         link.style("stroke", (d: any) => d.type === 'logic' ? "#00703c" : "#b1b4b6");
          link.style("stroke-width", (d: any) => d.type === 'logic' ? 2 : 1);
          
          g.selectAll(".flow-particle")
@@ -397,14 +397,13 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
     node.append("circle")
       .attr("r", (d: any) => d.type === 'table' ? 14 : 7)
       .attr("fill", (d: any) => {
-        if (d.type === 'table') return "#008400";
-        if (d.type === 'measure') return "#10b981";
-        if (d.type === 'column' || d.isCalc) return "#F5CE00";
-        return "#1F2122";
+        if (d.type === 'table') return "#00703c";
+        if (d.type === 'measure') return "#1d70b8";
+        if (d.type === 'column' || d.isCalc) return "#f47738";
+        return "#ffffff";
       })
-      .attr("stroke", (d: any) => d.type === 'table' ? (expandedIds.has(d.id) ? "rgba(255,255,255,0.8)" : "#F5CE00") : "rgba(255,255,255,0.2)")
-      .attr("stroke-width", (d: any) => d.type === 'table' ? 2 : 1)
-      .style("filter", (d: any) => d.type === 'table' ? "drop-shadow(0 0 8px rgba(0,132,0,0.5))" : "none");
+      .attr("stroke", (d: any) => d.type === 'table' ? (expandedIds.has(d.id) ? "#ffffff" : "#f47738") : "#b1b4b6")
+      .attr("stroke-width", (d: any) => d.type === 'table' ? 2 : 1);
 
     // Collapsed Indicator
     node.filter((d: any) => d.type === 'table' && !expandedIds.has(d.id))
@@ -412,7 +411,7 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .attr("text-anchor", "middle")
       .attr("dy", ".3em")
       .text("+")
-      .attr("fill", "#F5CE00")
+      .attr("fill", "#ffffff")
       .attr("font-size", "14px")
       .attr("font-weight", "bold");
 
@@ -423,9 +422,9 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .attr("y", -28)
       .attr("width", 40)
       .attr("height", 10)
-      .attr("rx", 4)
-      .attr("fill", "#1F2122")
-      .attr("stroke", "rgba(255,255,255,0.1)");
+      .attr("rx", 0)
+      .attr("fill", "#ffffff")
+      .attr("stroke", "#b1b4b6");
       
     node.filter((d: any) => d.type === 'table' && d.storageMode)
       .append("text")
@@ -433,8 +432,8 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .attr("text-anchor", "middle")
       .text((d: any) => d.storageMode.toUpperCase())
       .attr("font-size", "6px")
-      .attr("font-weight", "900")
-      .attr("fill", "#F5CE00")
+      .attr("font-weight", "bold")
+      .attr("fill", "#0b0c0c")
       .attr("letter-spacing", "1px");
 
     node.append("text")
@@ -442,10 +441,9 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
       .attr("x", (d: any) => d.type === 'table' ? 18 : 12)
       .text((d: any) => d.name)
       .attr("font-size", (d: any) => d.type === 'table' ? "11px" : "9px")
-      .attr("font-weight", (d: any) => d.type === 'table' ? "900" : "bold")
-      .attr("fill", "#F3F2F1")
-      .attr("class", "uppercase tracking-tighter pointer-events-none")
-      .style("text-shadow", "0 2px 4px rgba(0,0,0,0.5)");
+      .attr("font-weight", "bold")
+      .attr("fill", "#0b0c0c")
+      .attr("class", "uppercase tracking-tighter pointer-events-none");
 
     // Flow Particles for Logic Links
     const logicLinks = links.filter(l => l.type === 'logic');
@@ -539,19 +537,19 @@ export const LineageGraph = ({ measure, model, full = false }: LineageGraphProps
   }, [measure, model, full, expandedIds]);
 
   return (
-    <div ref={containerRef} className={cn("w-full bg-[#0B0C0C] rounded-3xl border border-border/50 overflow-hidden relative", full ? "h-[600px]" : "min-h-[400px]")}>
-      <div className="absolute top-6 left-6 flex gap-4 bg-[#1F2122]/50 backdrop-blur-md p-3 rounded-2xl border border-white/10 z-10">
+    <div ref={containerRef} className={cn("w-full bg-secondary border border-border overflow-hidden relative", full ? "h-[600px]" : "min-h-[400px]")}>
+      <div className="absolute top-6 left-6 flex gap-4 bg-card p-3 border border-border z-10">
         <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#008400]" />
-          <span className="text-[10px] text-white/80 uppercase font-black tracking-widest">Table</span>
+          <div className="w-2.5 h-2.5 bg-[#00703c]" />
+          <span className="text-[10px] text-foreground uppercase font-bold tracking-widest">Table</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
-          <span className="text-[10px] text-white/80 uppercase font-black tracking-widest">Measure</span>
+          <div className="w-2.5 h-2.5 bg-[#1d70b8]" />
+          <span className="text-[10px] text-foreground uppercase font-bold tracking-widest">Measure</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#F5CE00]" />
-          <span className="text-[10px] text-white/80 uppercase font-black tracking-widest">Calc Column</span>
+          <div className="w-2.5 h-2.5 bg-[#f47738]" />
+          <span className="text-[10px] text-foreground uppercase font-bold tracking-widest">Calc Column</span>
         </div>
       </div>
       
