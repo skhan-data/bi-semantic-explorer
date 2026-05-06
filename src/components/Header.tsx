@@ -64,9 +64,10 @@ export const Header = ({
             }`}
           >
             <Code size={13} />
-            Technical
           </button>
+        </div>
 
+        {onDownloadHtml && (
           <button
             onClick={() => onDownloadHtml?.()}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold shadow-none transition-all"
