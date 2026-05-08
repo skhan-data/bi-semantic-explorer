@@ -156,14 +156,34 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
               <div className="ml-4 pl-3 border-l border-border/50 mt-1 space-y-1">
                 {domain.tables.map(table => (
                   <div key={table.name}>
-                    <button
-                      onClick={() => toggleTable(table.name)}
-                      className="w-full flex items-center gap-2 p-1.5 hover:bg-secondary rounded-lg transition-colors group"
+                    <div
+                      className={cn(
+                        "w-full flex items-center gap-1 p-1.5 rounded-lg transition-colors group",
+                        selectedItem?.name === table.name && (selectedItem as any).isTable 
+                          ? "bg-primary/10 shadow-sm" 
+                          : "hover:bg-secondary"
+                      )}
                     >
-                      {expandedTables[table.name] ? <ChevronDown size={12} className="text-primary" /> : <ChevronRight size={12} className="text-muted-foreground" />}
-                      <TableIcon size={14} className="text-primary/70" />
-                      <span className="font-bold text-xs">{table.name}</span>
-                    </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTable(table.name);
+                        }}
+                        className="p-1 hover:bg-secondary rounded text-muted-foreground"
+                      >
+                        {expandedTables[table.name] ? <ChevronDown size={12} className="text-primary" /> : <ChevronRight size={12} />}
+                      </button>
+                      <button
+                        onClick={() => setSelectedItem({ ...table.table, isTable: true })}
+                        className="flex-1 flex items-center gap-2 text-left"
+                      >
+                        <TableIcon size={14} className="text-primary/70" />
+                        <span className={cn(
+                          "font-bold text-xs",
+                          selectedItem?.name === table.name && (selectedItem as any).isTable ? "text-primary" : ""
+                        )}>{table.name}</span>
+                      </button>
+                    </div>
                     
                     {expandedTables[table.name] && (
                       <div className="ml-4 pl-3 border-l border-border/50 mt-1 space-y-0.5">

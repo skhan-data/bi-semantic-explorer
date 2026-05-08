@@ -52,7 +52,9 @@ def extract_pbi_metadata(input_path):
         # If it was a nested .SemanticModel, look for .Report nearby
         report_folder = real_path.replace('.SemanticModel', '.Report')
         if os.path.exists(report_folder) and os.path.isdir(report_folder):
-            model["reports"] = extract_from_pbir(report_folder)
+            report_data = extract_from_pbir(report_folder)
+            model["reports"] = report_data.get("reports", [])
+            model["themes"] = report_data.get("themes", [])
         
         # Post-process
         if model:
@@ -412,8 +414,29 @@ def extract_from_pbir(report_folder):
             
             pages.append(page_data)
             
+    # Extract Themes
+    themes = []
+    themes_path = os.path.join(report_folder, 'StaticResources', 'SharedResources', 'BaseThemes')
+    if os.path.exists(themes_path):
+        for f in os.listdir(themes_path):
+            if f.endswith('.json'):
+                try:
+                    with open(os.path.join(themes_path, f), 'r', encoding='utf-8') as tf:
+                        theme_data = json.load(tf)
+                        themes.append({
+                            "name": theme_data.get("name", f.replace('.json', '')),
+                            "dataColors": theme_data.get("dataColors", []),
+                            "background": theme_data.get("background", "#FFFFFF"),
+                            "foreground": theme_data.get("foreground", "#000000"),
+                            "tableAccent": theme_data.get("tableAccent", "#118DFF"),
+                            "textClasses": theme_data.get("textClasses", {}),
+                            "raw": theme_data
+                        })
+                except Exception:
+                    pass
+            
     report_name = os.path.basename(report_folder).replace('.Report', '')
-    return [{"name": report_name, "pages": pages}]
+    return {"reports": [{"name": report_name, "pages": pages}], "themes": themes}
 
 def create_measure_object(name, expression, description, format_string):
     # Description extraction is now handled in the resolve_dependencies post-processing

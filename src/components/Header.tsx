@@ -23,7 +23,7 @@ export const Header = ({
   setViewMode,
 }: HeaderProps) => {
   return (
-    <header className="h-16 border-b border-border flex items-center justify-between px-8 bg-card/30 backdrop-blur-md z-10 sticky top-0">
+    <header className="h-20 flex items-center justify-between px-8 bg-background z-10 sticky top-0">
       <div className="flex-1 max-w-2xl relative group">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
         <input

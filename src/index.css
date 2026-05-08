@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @theme {
   --color-background: var(--background);
@@ -10,70 +11,84 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
-  --font-sans: 'GDS Transport', Arial, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
 
 /* ============================================
-   GOV.UK / CORPORATE DESIGN SYSTEM
+   MODERN SAAS DESIGN SYSTEM
    ============================================ */
 
 :root {
-  --primary: #00703c;          /* GOV.UK Green */
+  --primary: #ea580c;          /* Warm Orange */
   --primary-foreground: #ffffff;
-  --accent: #1d70b8;           /* GOV.UK Blue */
-  --cta: #00703c;
+  --accent: #f97316;           /* Lighter Orange */
 
-  --background: #f3f2f1;       /* GOV.UK Light Grey */
-  --foreground: #0b0c0c;       /* GOV.UK Black */
-  --card: #ffffff;
-  --border: #b1b4b6;           /* GOV.UK Mid Grey */
-  --secondary: #ffffff;
-  --muted-foreground: #505a5f; /* GOV.UK Dark Grey */
+  --background: #f4f5f6;       /* Soft Light Grey background */
+  --foreground: #111827;       /* Dark slate text */
+  --card: #ffffff;             /* White cards */
+  --border: #e5e7eb;           /* Soft grey borders */
+  --secondary: #f9fafb;        /* Very light grey for hover/soft backgrounds */
+  --muted-foreground: #6b7280; /* Muted slate text */
 }
 
-/* Force light mode styles globally */
 body {
-  font-family: 'GDS Transport', Arial, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   background-color: var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* GOV.UK strictly uses square corners for a clean, formal look */
-* {
-  border-radius: 0 !important;
-  box-shadow: none !important;
+/* Base structural adjustments for the new SaaS look */
+.bg-card {
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  border: 1px solid var(--border);
+}
+
+.bg-secondary {
+  border-radius: var(--radius-lg);
+}
+
+button {
+  border-radius: 0.5rem;
 }
 
 /* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--secondary);
+  background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--border);
+  border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
 
-/* Code Highlighting - Light Theme suitable for Technical Docs */
+/* Code Highlighting */
 pre[class*="language-"] {
-  background: #f3f2f1 !important;
+  background: #f9fafb !important;
   margin: 0 !important;
   padding: 1rem !important;
   border: 1px solid var(--border);
-  border-left: 5px solid var(--accent) !important;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--primary) !important;
 }
 code[class*="language-"] {
   text-shadow: none !important;
-  color: #0b0c0c !important;
+  color: #111827 !important;
+  font-family: 'ui-monospace', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace !important;
+  font-size: 0.85em;
 }
-.token.function { color: #1d70b8 !important; }
-.token.string { color: #00703c !important; }
-.token.keyword { color: #d4351c !important; }
-.token.operator { color: #0b0c0c !important; }
-.token.punctuation { color: #505a5f !important; }
+.token.function { color: #2563eb !important; }
+.token.string { color: #ea580c !important; }
+.token.keyword { color: #d946ef !important; }
+.token.operator { color: #6b7280 !important; }
+.token.punctuation { color: #9ca3af !important; }

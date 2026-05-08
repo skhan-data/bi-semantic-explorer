@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Database, Table as TableIcon, LayoutDashboard, GitBranch, 
-  Settings, Globe, RefreshCw, Layers, Shield, GitCompare 
+  Settings, Globe, RefreshCw, Layers, Shield, GitCompare, Palette 
 } from 'lucide-react';
 import { cn } from '../utils';
 
@@ -45,8 +45,8 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, count, badge }: Sideb
 );
 
 interface SidebarProps {
-  activeTab: 'overview' | 'explorer' | 'reports' | 'relationships' | 'compare';
-  setActiveTab: (tab: 'overview' | 'explorer' | 'reports' | 'relationships' | 'compare') => void;
+  activeTab: 'overview' | 'explorer' | 'reports' | 'relationships' | 'cleanup' | 'themes' | 'compare';
+  setActiveTab: (tab: 'overview' | 'explorer' | 'reports' | 'relationships' | 'cleanup' | 'themes' | 'compare') => void;
   tableCount: number;
   explorerCount: number;
   reportCount: number;
@@ -123,6 +123,23 @@ export const Sidebar = ({
               active={activeTab === 'compare'} 
               onClick={() => setActiveTab('compare')} 
             />
+          )}
+
+          {viewMode === 'technical' && (
+            <div className="pt-2 space-y-1">
+              <SidebarItem 
+                icon={Database} 
+                label="Spring Cleaning" 
+                active={activeTab === 'cleanup'} 
+                onClick={() => setActiveTab('cleanup')} 
+              />
+              <SidebarItem 
+                icon={Palette} 
+                label="Brand Theme" 
+                active={activeTab === 'themes'} 
+                onClick={() => setActiveTab('themes')} 
+              />
+            </div>
           )}
         </div>
 

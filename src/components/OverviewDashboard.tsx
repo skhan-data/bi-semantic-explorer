@@ -58,14 +58,14 @@ export const OverviewDashboard = ({ model, onNavigateToExplorer }: OverviewDashb
   return (
     <div className="space-y-8 pb-12">
       {/* Executive Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 p-6 bg-card/30 border border-border rounded-3xl">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 p-8 bg-card border border-border shadow-sm">
         <div>
-          <h2 className="text-2xl font-black tracking-tight">{model.name} Overview</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">{model.name} Overview</h2>
           <p className="text-sm text-muted-foreground mt-1">Explore business domains and structural metrics across your semantic model.</p>
         </div>
         <button
           onClick={onNavigateToExplorer}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold text-sm tracking-widest rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all uppercase"
+          className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold text-sm tracking-widest hover:opacity-90 transition-all uppercase"
         >
           <Database size={16} />
           Explore Model
@@ -80,14 +80,14 @@ export const OverviewDashboard = ({ model, onNavigateToExplorer }: OverviewDashb
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="p-6 bg-card/50 border border-border rounded-3xl shadow-lg space-y-4 hover:border-primary/20 hover:bg-card transition-all group"
+            className="p-6 bg-card border border-border shadow-sm flex items-center gap-4 hover:border-primary/50 transition-all"
           >
-            <div className={`w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center group-hover:scale-110 transition-transform ${stat.color}`}>
+            <div className={`w-12 h-12 bg-secondary flex items-center justify-center rounded-lg ${stat.color}`}>
               <stat.icon size={24} />
             </div>
             <div>
-               <h2 className="text-4xl font-black leading-none">{stat.value}</h2>
-               <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-2">{stat.label}</p>
+               <h2 className="text-3xl font-bold leading-none">{stat.value}</h2>
+               <p className="text-xs text-muted-foreground font-medium mt-1">{stat.label}</p>
             </div>
           </motion.div>
         ))}
@@ -108,22 +108,20 @@ export const OverviewDashboard = ({ model, onNavigateToExplorer }: OverviewDashb
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.05 }}
               onClick={onNavigateToExplorer}
-              className="cursor-pointer group p-6 bg-card border border-border rounded-3xl shadow-lg hover:shadow-2xl hover:border-primary/30 hover:bg-secondary/20 transition-all flex flex-col relative overflow-hidden"
+              className="cursor-pointer group p-6 bg-card border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex flex-col"
             >
-              <div className="absolute -right-12 -bottom-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              
               <div className="flex items-start justify-between mb-4">
-                <h4 className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">{domain.name}</h4>
-                <div className="p-2 bg-secondary rounded-xl text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                <h4 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">{domain.name}</h4>
+                <div className="p-2 bg-secondary rounded-lg text-muted-foreground group-hover:text-primary transition-colors">
                   <Layers size={18} />
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground px-3 py-1 font-bold">
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 font-bold">
                   {domain.tables.length} {domain.tables.length === 1 ? 'Table' : 'Tables'}
                 </Badge>
-                <div className="text-xs font-bold text-muted-foreground flex items-center gap-1.5">
+                <div className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                   <Zap size={12} className="text-amber-500" />
                   {domain.measureCount} Measures
                 </div>

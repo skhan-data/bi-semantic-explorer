@@ -8,6 +8,7 @@ export interface PBIModel {
   tables: PBITable[];
   relationships: PBIRelationship[];
   reports?: PBIReport[];
+  themes?: PBITheme[];
 }
 
 export interface PBITable {
@@ -81,4 +82,14 @@ export interface PBIVisual {
   title?: string;
   usedMeasures: string[];
   usedColumns: string[];
+}
+
+export interface PBITheme {
+  name: string;
+  dataColors: string[];
+  background: string;
+  foreground: string;
+  tableAccent: string;
+  textClasses?: Record<string, any>;
+  raw?: any;
 }

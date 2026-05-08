@@ -34,11 +34,13 @@ import { ModelDiff } from './components/ModelDiff';
 import { RelationshipMatrix } from './components/RelationshipMatrix';
 import { SimpleDashboard } from './components/SimpleDashboard';
 import { SimpleExplorer } from './components/SimpleExplorer';
+import { SpringCleaningDashboard } from './components/SpringCleaningDashboard';
+import { ThemeBrandingExtractor } from './components/ThemeBrandingExtractor';
 
 
 export default function App() {
   const [model, setModel] = useState<PBIModel>({ name: 'New Model', tables: [], relationships: [] });
-  const [activeTab, setActiveTab] = useState<'overview' | 'explorer' | 'reports' | 'relationships' | 'compare'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'explorer' | 'reports' | 'relationships' | 'cleanup' | 'compare'>('overview');
   const [explorerMode, setExplorerMode] = useState<'measures' | 'columns'>('measures');
   const [selectedItem, setSelectedItem] = useState<PBIMeasure | PBIColumn | null>(null);
   const [bulkSelection, setBulkSelection] = useState<any[]>([]);
@@ -646,6 +648,14 @@ export default function App() {
                       )}
                     </div>
                   </div>
+                )}
+
+                {activeTab === 'cleanup' && (
+                  <SpringCleaningDashboard model={model} />
+                )}
+
+                {activeTab === 'themes' && (
+                  <ThemeBrandingExtractor model={model} />
                 )}
 
                 {activeTab === 'compare' && (
