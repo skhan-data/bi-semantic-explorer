@@ -50,7 +50,6 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
     }
   };
 
-  // Structure: Domains -> Tables -> Folders -> Items (Measures + Columns)
   const tree = useMemo(() => {
     const dMap = new Map<string, PBITable[]>();
     
@@ -88,7 +87,6 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
     }).filter(d => d.tables.length > 0);
   }, [model, searchTerm]);
 
-  // Auto-expand if searching
   useEffect(() => {
     if (searchTerm.length > 1) {
       const dExp: Record<string, boolean> = {};
@@ -109,7 +107,6 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
     }
   }, [searchTerm, tree]);
 
-  // Initial expand
   useEffect(() => {
     if (Object.keys(expandedDomains).length === 0 && tree.length > 0 && !searchTerm) {
       setExpandedDomains({ [tree[0].domainName]: true });
@@ -117,9 +114,9 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
   }, [tree]);
 
   return (
-    <div className="w-80 bg-card/60 border-r border-border flex flex-col h-full flex-shrink-0">
-      <div className="p-4 border-b border-border space-y-4">
-        <h3 className="font-black text-xs tracking-widest uppercase text-muted-foreground">Model Structure</h3>
+    <div className="w-[300px] bg-background border-r border-border/50 flex flex-col h-full flex-shrink-0">
+      <div className="p-4 border-b border-border/50 space-y-3">
+        <h3 className="font-semibold text-xs tracking-wider uppercase text-muted-foreground">Model Structure</h3>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
           <input
@@ -127,7 +124,7 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
             placeholder="Search all fields..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full bg-secondary border border-border rounded-xl py-2 pl-9 pr-3 text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+            className="w-full bg-secondary border border-border rounded-lg py-1.5 pl-9 pr-3 text-xs focus:outline-none focus:border-foreground/30 transition-all text-foreground"
           />
         </div>
       </div>
@@ -136,7 +133,7 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
         {tree.length === 0 && (
           <div className="text-center p-6 mt-10">
             <Search className="mx-auto text-muted-foreground mb-4 opacity-50" size={32} />
-            <p className="text-sm font-bold opacity-50">No results found.</p>
+            <p className="text-sm font-medium opacity-50 text-muted-foreground">No results found.</p>
           </div>
         )}
 
@@ -144,23 +141,23 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
           <div key={domain.domainName} className="mb-2">
             <button
               onClick={() => toggleDomain(domain.domainName)}
-              className="w-full flex items-center gap-2 p-2 hover:bg-secondary rounded-xl transition-colors group"
+              className="w-full flex items-center gap-2 p-2 hover:bg-secondary rounded-md transition-colors group pressable"
             >
-              {expandedDomains[domain.domainName] ? <ChevronDown size={14} className="text-primary" /> : <ChevronRight size={14} className="text-muted-foreground" />}
-              <Layers size={14} className="text-primary" />
-              <span className="font-bold text-sm tracking-tight">{domain.domainName}</span>
-              <span className="ml-auto text-[10px] text-muted-foreground font-black px-1.5 py-0.5 bg-secondary rounded-md">{domain.tables.length}</span>
+              {expandedDomains[domain.domainName] ? <ChevronDown size={14} className="text-foreground" /> : <ChevronRight size={14} className="text-muted-foreground" />}
+              <Layers size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+              <span className="font-medium text-sm tracking-tight text-foreground">{domain.domainName}</span>
+              <span className="ml-auto text-[10px] text-muted-foreground font-medium px-1.5 py-0.5 bg-secondary rounded-sm">{domain.tables.length}</span>
             </button>
             
             {expandedDomains[domain.domainName] && (
-              <div className="ml-4 pl-3 border-l border-border/50 mt-1 space-y-1">
+              <div className="ml-4 pl-3 border-l border-border mt-1 space-y-1">
                 {domain.tables.map(table => (
                   <div key={table.name}>
                     <div
                       className={cn(
-                        "w-full flex items-center gap-1 p-1.5 rounded-lg transition-colors group",
+                        "w-full flex items-center gap-1 p-1.5 rounded-md transition-colors group",
                         selectedItem?.name === table.name && (selectedItem as any).isTable 
-                          ? "bg-primary/10 shadow-sm" 
+                          ? "bg-card border border-border shadow-sm" 
                           : "hover:bg-secondary"
                       )}
                     >
@@ -169,24 +166,24 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
                           e.stopPropagation();
                           toggleTable(table.name);
                         }}
-                        className="p-1 hover:bg-secondary rounded text-muted-foreground"
+                        className="p-1 hover:bg-white/10 rounded text-muted-foreground transition-colors"
                       >
-                        {expandedTables[table.name] ? <ChevronDown size={12} className="text-primary" /> : <ChevronRight size={12} />}
+                        {expandedTables[table.name] ? <ChevronDown size={12} className="text-foreground" /> : <ChevronRight size={12} />}
                       </button>
                       <button
                         onClick={() => setSelectedItem({ ...table.table, isTable: true })}
                         className="flex-1 flex items-center gap-2 text-left"
                       >
-                        <TableIcon size={14} className="text-primary/70" />
+                        <TableIcon size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                         <span className={cn(
-                          "font-bold text-xs",
-                          selectedItem?.name === table.name && (selectedItem as any).isTable ? "text-primary" : ""
+                          "font-medium text-xs text-muted-foreground group-hover:text-foreground transition-colors",
+                          selectedItem?.name === table.name && (selectedItem as any).isTable ? "text-foreground font-semibold" : ""
                         )}>{table.name}</span>
                       </button>
                     </div>
                     
                     {expandedTables[table.name] && (
-                      <div className="ml-4 pl-3 border-l border-border/50 mt-1 space-y-0.5">
+                      <div className="ml-4 pl-3 border-l border-border mt-1 space-y-0.5">
                         {/* Folders */}
                         {Object.entries(table.folders).map(([folderName, items]) => {
                            const fKey = `${table.name}-${folderName}`;
@@ -194,39 +191,39 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
                              <div key={folderName}>
                                 <button
                                   onClick={() => toggleFolder(fKey)}
-                                  className="w-full flex items-center gap-2 p-1.5 hover:bg-secondary rounded-lg transition-colors group"
+                                  className="w-full flex items-center gap-2 p-1.5 hover:bg-secondary rounded-md transition-colors group pressable"
                                 >
-                                  {expandedFolders[fKey] ? <ChevronDown size={12} className="text-primary/70" /> : <ChevronRight size={12} className="text-muted-foreground" />}
-                                  <Folder size={12} className="text-amber-500" />
-                                  <span className="font-bold text-[11px] text-muted-foreground">{folderName.split('\\').pop() || folderName}</span>
+                                  {expandedFolders[fKey] ? <ChevronDown size={12} className="text-foreground" /> : <ChevronRight size={12} className="text-muted-foreground" />}
+                                  <Folder size={12} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+                                  <span className="font-medium text-[11px] text-muted-foreground group-hover:text-foreground transition-colors">{folderName.split('\\').pop() || folderName}</span>
                                 </button>
                                 {expandedFolders[fKey] && (
-                                  <div className="ml-5 pl-2 border-l border-border/30 mt-1 space-y-0.5 pb-1">
+                                  <div className="ml-5 pl-2 border-l border-border mt-1 space-y-0.5 pb-1">
                                     {(items as any[]).map((item: any) => {
                                        const isSelected = selectedItem?.name === item.name && selectedItem?.tableName === item.tableName;
                                        const isBulkSelected = bulkSelection.some(b => b.name === item.name && b.tableName === item.tableName);
                                        return (
                                          <div key={item.name} className={cn(
-                                             "w-full flex items-stretch gap-1 p-1 rounded-lg transition-all",
-                                             isSelected ? "bg-primary/10 shadow-sm" : "hover:bg-secondary/50"
+                                             "w-full flex items-stretch gap-1 p-1 rounded-md transition-all",
+                                             isSelected ? "bg-card border border-border shadow-sm" : "hover:bg-secondary"
                                          )}>
                                            {setBulkSelection && (
                                               <button 
                                                 onClick={(e) => toggleBulkSelect(e, item)}
-                                                className="p-1.5 flex-[0_0_auto] text-muted-foreground hover:text-orange-500 transition-colors rounded hover:bg-orange-500/10"
+                                                className="p-1.5 flex-[0_0_auto] text-muted-foreground hover:text-primary transition-colors rounded hover:bg-white/5"
                                               >
-                                                {isBulkSelected ? <CheckSquare size={14} className="text-orange-500" /> : <Square size={14} />}
+                                                {isBulkSelected ? <CheckSquare size={14} className="text-primary" /> : <Square size={14} />}
                                               </button>
                                            )}
                                            <button
                                              onClick={() => setSelectedItem(item)}
                                              className={cn(
-                                               "flex-1 flex items-center gap-2 p-1.5 rounded-md transition-all text-left",
-                                               isSelected ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                                               "flex-1 flex items-center gap-2 p-1 rounded transition-all text-left group",
+                                               isSelected ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                                              )}
                                            >
-                                             {item._type === 'measure' ? <Zap size={12} className={isSelected ? "text-primary" : "text-blue-500/70"} /> : <Hash size={12} className={isSelected ? "text-primary" : "text-orange-500/70"} />}
-                                             <span className="text-[11px] truncate">{item.name}</span>
+                                             {item._type === 'measure' ? <Zap size={12} className={isSelected ? "text-primary" : "text-muted-foreground group-hover:text-primary transition-colors"} /> : <Hash size={12} className={isSelected ? "text-primary" : "text-muted-foreground group-hover:text-primary transition-colors"} />}
+                                             <span className="text-[11px] truncate font-medium">{item.name}</span>
                                            </button>
                                          </div>
                                        )
@@ -243,26 +240,26 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
                           const isBulkSelected = bulkSelection.some(b => b.name === item.name && b.tableName === item.tableName);
                           return (
                             <div key={item.name} className={cn(
-                                "w-full flex items-stretch gap-1 p-1 rounded-lg transition-all",
-                                isSelected ? "bg-primary/10 shadow-sm" : "hover:bg-secondary/50"
+                                "w-full flex items-stretch gap-1 p-1 rounded-md transition-all",
+                                isSelected ? "bg-card border border-border shadow-sm" : "hover:bg-secondary"
                             )}>
                               {setBulkSelection && (
                                 <button 
                                   onClick={(e) => toggleBulkSelect(e, item)}
-                                  className="p-1.5 flex-[0_0_auto] text-muted-foreground hover:text-orange-500 transition-colors rounded hover:bg-orange-500/10"
+                                  className="p-1.5 flex-[0_0_auto] text-muted-foreground hover:text-primary transition-colors rounded hover:bg-white/5"
                                 >
-                                  {isBulkSelected ? <CheckSquare size={14} className="text-orange-500" /> : <Square size={14} />}
+                                  {isBulkSelected ? <CheckSquare size={14} className="text-primary" /> : <Square size={14} />}
                                 </button>
                               )}
                               <button
                                 onClick={() => setSelectedItem(item)}
                                 className={cn(
-                                  "flex-1 flex items-center gap-2 p-1.5 rounded-md transition-all text-left",
-                                  isSelected ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                                  "flex-1 flex items-center gap-2 p-1 rounded transition-all text-left group",
+                                  isSelected ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                                 )}
                               >
-                                {item._type === 'measure' ? <Zap size={12} className={isSelected ? "text-primary" : "text-blue-500/70"} /> : <Hash size={12} className={isSelected ? "text-primary" : "text-orange-500/70"} />}
-                                <span className="text-[11px] truncate flex-1">{item.name}</span>
+                                {item._type === 'measure' ? <Zap size={12} className={isSelected ? "text-primary" : "text-muted-foreground group-hover:text-primary transition-colors"} /> : <Hash size={12} className={isSelected ? "text-primary" : "text-muted-foreground group-hover:text-primary transition-colors"} />}
+                                <span className="text-[11px] truncate flex-1 font-medium">{item.name}</span>
                                 {item.isHidden && <span className="opacity-50 text-[8px] bg-secondary px-1 rounded">H</span>}
                               </button>
                             </div>
@@ -270,7 +267,7 @@ export const SemanticExplorerTree = ({ model, selectedItem, setSelectedItem, bul
                         })}
                         
                         {table.rootItems.length === 0 && Object.keys(table.folders).length === 0 && (
-                          <div className="p-2 text-[10px] text-muted-foreground italic">No matches</div>
+                          <div className="p-2 text-[10px] text-muted-foreground italic font-medium">No matches</div>
                         )}
                       </div>
                     )}

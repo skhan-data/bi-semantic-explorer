@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue } from 'motion/react';
 import { 
   Upload, GitBranch, Shield, Lock, 
-  ArrowRight, RefreshCw, X, Info,
-  Search, Link as LinkIcon
+  ArrowRight, RefreshCw, X, Link as LinkIcon
 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '../utils';
@@ -16,6 +15,39 @@ interface ConnectHubProps {
 }
 
 type TabType = 'zip' | 'git';
+
+// The "Spotlight Border Card" component from design-taste-frontend
+function SpotlightCard({ children, className }: { children: React.ReactNode, className?: string }) {
+  let mouseX = useMotionValue(0);
+  let mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    let { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <div
+      className={cn("group relative rounded-2xl bg-card border border-border overflow-hidden", className)}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(255,255,255,0.06),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      {children}
+    </div>
+  );
+}
 
 export const ConnectHub = ({ onAnalyzeZip, onAnalyzeGit, isAnalyzing, error }: ConnectHubProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('zip');
@@ -39,201 +71,251 @@ export const ConnectHub = ({ onAnalyzeZip, onAnalyzeGit, isAnalyzing, error }: C
     onAnalyzeGit(gitConfig);
   };
 
-  const tabs: { id: TabType; label: string; icon: any; desc: string }[] = [
-    { id: 'zip', label: 'Local Project', icon: Upload, desc: 'Upload .zip export of your .pbip project folder' },
-    { id: 'git', label: 'Git Sync', icon: GitBranch, desc: 'Connect directly to GitHub or Azure DevOps' },
-  ];
+  const tabs = [
+    { id: 'zip', label: 'Local Project', icon: Upload },
+    { id: 'git', label: 'Git Sync', icon: GitBranch },
+  ] as const;
 
   return (
-    <div className="h-full min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Soft Background Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+    <div className="h-full min-h-[100dvh] bg-background text-foreground flex items-center justify-center p-6 sm:p-12 relative overflow-hidden selection:bg-primary/20">
+      
+      {/* Vercel-style ambient background gradient */}
+      <div className="fixed inset-0 pointer-events-none flex items-center justify-center">
+        <div className="absolute top-0 w-full h-[50vh] bg-gradient-to-b from-[oklch(0.18_0.02_285)] to-transparent opacity-50" />
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="absolute w-[800px] h-[400px] bg-[oklch(0.6_0.15_250)]/10 blur-[120px] rounded-full" 
+        />
+      </div>
 
-      <div className="z-10 max-w-2xl w-full space-y-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        className="z-10 w-full max-w-xl mx-auto"
+      >
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 bg-white border border-border shadow-sm rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Upload size={28} className="text-primary" />
+        <div className="text-center space-y-6 mb-12">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 100, damping: 20 }}
+            className="w-16 h-16 bg-card border border-border rounded-[1.25rem] flex items-center justify-center mx-auto shadow-2xl"
+          >
+            <Shield size={28} className="text-primary" />
+          </motion.div>
+          
+          <div className="space-y-3">
+            <h1 className="text-4xl sm:text-5xl font-medium tracking-tight text-foreground">
+              Semantic Explorer
+            </h1>
+            <p className="text-lg text-muted-foreground font-light max-w-[45ch] mx-auto leading-relaxed">
+              Drop your Power BI dataset to generate an instant, interactive audit architecture.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground">
-            BI Semantic Explorer
-          </h1>
-          <p className="text-base text-muted-foreground font-medium max-w-md mx-auto">
-            Upload your Power BI project to instantly generate a technical audit, relationship matrix, and dependency lineage.
-          </p>
         </div>
 
-        {/* Connection Box */}
-        <div className="bg-card border border-border/50 shadow-xl shadow-black/5 rounded-3xl overflow-hidden">
-          {/* Tab Switcher */}
-          <div className="flex p-2 bg-secondary/50 border-b border-border/50">
+        {/* Spotlight Hub Card */}
+        <SpotlightCard className="shadow-2xl">
+          <div className="flex border-b border-border/50">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-2 py-3 px-2 transition-all rounded-xl",
-                  activeTab === tab.id 
-                    ? "bg-white text-foreground font-bold shadow-sm border border-border/50" 
-                    : "text-muted-foreground hover:bg-black/5 hover:text-foreground font-medium border border-transparent"
-                )}
+                className="flex-1 relative py-4 flex items-center justify-center gap-2 text-sm transition-colors pressable"
               >
-                <tab.icon size={16} className={activeTab === tab.id ? "text-primary" : "text-muted-foreground"} />
-                <span className="text-sm">{tab.label}</span>
+                {activeTab === tab.id && (
+                  <motion.div
+                    layoutId="activeTabIndicator"
+                    className="absolute inset-0 bg-secondary/50 rounded-t-2xl"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <tab.icon size={16} className={cn("relative z-10", activeTab === tab.id ? "text-primary" : "text-muted-foreground")} />
+                <span className={cn("relative z-10 font-medium", activeTab === tab.id ? "text-foreground" : "text-muted-foreground")}>
+                  {tab.label}
+                </span>
               </button>
             ))}
           </div>
 
-          <div className="p-8 sm:p-10 min-h-[340px] flex flex-col bg-white">
+          <div className="p-8 sm:p-10 min-h-[360px] flex flex-col relative z-10">
             <AnimatePresence mode="wait">
-              {activeTab === 'zip' && (
+              {activeTab === 'zip' ? (
                 <motion.div
                   key="zip"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-6 flex-1 flex flex-col"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="flex-1 flex flex-col h-full"
                 >
                   <div 
                     {...getRootProps()} 
                     className={cn(
-                      "flex-1 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-12 transition-all cursor-pointer group bg-secondary/20",
-                      isDragActive ? "border-primary bg-primary/5" : "border-border hover:border-primary/30 hover:bg-primary/5",
-                      isAnalyzing && "opacity-50 cursor-not-allowed"
+                      "flex-1 h-full rounded-xl border border-dashed flex flex-col items-center justify-center p-8 transition-all cursor-pointer group bg-secondary/20",
+                      isDragActive ? "border-primary bg-primary/5 scale-[0.98]" : "border-border/60 hover:border-border hover:bg-secondary/40",
+                      isAnalyzing && "opacity-50 pointer-events-none"
                     )}
                   >
                     <input {...getInputProps()} />
-                    <div className="w-16 h-16 bg-white border border-border/50 shadow-sm rounded-xl flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all mb-4">
-                      {isAnalyzing ? <RefreshCw className="animate-spin" size={24} /> : <Upload size={24} />}
+                    <motion.div 
+                      className="w-14 h-14 bg-card border border-border rounded-xl flex items-center justify-center text-muted-foreground mb-6 shadow-sm"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {isAnalyzing ? <RefreshCw className="animate-spin text-primary" size={24} /> : <Upload size={24} className="group-hover:text-foreground transition-colors" />}
+                    </motion.div>
+                    <div className="text-center space-y-2">
+                      <p className="text-base font-medium text-foreground">
+                        {isAnalyzing ? "Extracting schema..." : "Drop .pbip or .bim"}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        or click to browse local files
+                      </p>
                     </div>
-                    <div className="text-center space-y-1">
-                      <p className="text-base font-bold text-foreground">{isAnalyzing ? "Analyzing Technical Logic..." : "Drop Project ZIP here"}</p>
-                      <p className="text-xs text-muted-foreground font-medium">or click to browse your files</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold justify-center px-4 py-3 bg-secondary/50 rounded-xl border border-border/50">
-                    <Shield size={14} className="text-primary" />
-                    Session-Based • 100% Secure • Discarded after use
                   </div>
                 </motion.div>
-              )}
-
-              {activeTab === 'git' && (
+              ) : (
                 <motion.div
                   key="git"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-6"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="flex-1 flex flex-col h-full"
                 >
-                  <form onSubmit={handleGitSubmit} className="space-y-5">
+                  <form onSubmit={handleGitSubmit} className="space-y-6 flex-1 flex flex-col">
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-foreground flex items-center gap-2">
-                        <LinkIcon size={14} className="text-muted-foreground" /> Repository URL
+                      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                        Repository URL
                       </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="https://github.com/org/pbi-project"
-                        className="w-full bg-secondary/30 border border-border/80 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
-                        value={gitConfig.repoUrl}
-                        onChange={e => setGitConfig({ ...gitConfig, repoUrl: e.target.value })}
-                        disabled={isAnalyzing}
-                      />
+                      <div className="relative group">
+                        <LinkIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-foreground" />
+                        <input
+                          type="text"
+                          required
+                          placeholder="https://github.com/org/dataset"
+                          className="w-full bg-secondary/50 border border-border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all font-mono"
+                          value={gitConfig.repoUrl}
+                          onChange={e => setGitConfig({ ...gitConfig, repoUrl: e.target.value })}
+                          disabled={isAnalyzing}
+                        />
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-bold text-foreground flex items-center gap-2">
-                          <GitBranch size={14} className="text-muted-foreground" /> Branch
-                        </label>
+                        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Branch</label>
                         <input
                           type="text"
                           required
                           placeholder="main"
-                          className="w-full bg-secondary/30 border border-border/80 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+                          className="w-full bg-secondary/50 border border-border rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-primary/50 transition-all font-mono"
                           value={gitConfig.branch}
                           onChange={e => setGitConfig({ ...gitConfig, branch: e.target.value })}
                           disabled={isAnalyzing}
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-bold text-foreground flex items-center gap-2">
-                          <Lock size={14} className="text-muted-foreground" /> Access Token (PAT)
-                        </label>
-                        <input
-                          type="password"
-                          required
-                          placeholder="Required for Sync"
-                          className="w-full bg-secondary/30 border border-border/80 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
-                          value={gitConfig.token}
-                          onChange={e => setGitConfig({ ...gitConfig, token: e.target.value })}
-                          disabled={isAnalyzing}
-                        />
+                        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Access Token</label>
+                        <div className="relative group">
+                           <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-foreground" />
+                           <input
+                             type="password"
+                             required
+                             placeholder="ghp_..."
+                             className="w-full bg-secondary/50 border border-border rounded-xl py-3 pl-9 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all font-mono"
+                             value={gitConfig.token}
+                             onChange={e => setGitConfig({ ...gitConfig, token: e.target.value })}
+                             disabled={isAnalyzing}
+                           />
+                        </div>
                       </div>
                     </div>
 
-                    <button
-                      type="submit"
-                      disabled={isAnalyzing || !gitConfig.repoUrl || !gitConfig.token}
-                      className="w-full bg-primary text-primary-foreground rounded-xl py-3.5 font-bold text-sm hover:opacity-90 hover:-translate-y-0.5 shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:hover:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
-                    >
-                      {isAnalyzing ? (
-                        <>
-                          <RefreshCw className="animate-spin" size={18} />
-                          Connecting & Analyzing...
-                        </>
-                      ) : (
-                        <>
-                          <ArrowRight size={18} />
-                          Initialize Git Sync
-                        </>
-                      )}
-                    </button>
+                    <div className="mt-auto pt-4">
+                      <button
+                        type="submit"
+                        disabled={isAnalyzing || !gitConfig.repoUrl || !gitConfig.token}
+                        className="pressable w-full bg-primary text-primary-foreground rounded-xl py-4 font-semibold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 hover:bg-white"
+                      >
+                        {isAnalyzing ? (
+                          <>
+                            <RefreshCw className="animate-spin" size={16} />
+                            Cloning Repository...
+                          </>
+                        ) : (
+                          <>
+                            Sync Architecture <ArrowRight size={16} />
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </form>
-                  <p className="text-xs text-muted-foreground text-center font-medium">
-                    All Git clones are session-based and deleted immediately after analysis.
-                  </p>
                 </motion.div>
               )}
-
             </AnimatePresence>
 
             {/* Error Message */}
             <AnimatePresence>
               {error && (
                 <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3"
+                  initial={{ opacity: 0, height: 0, y: 10 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: 10 }}
+                  className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 overflow-hidden"
                 >
-                  <div className="text-red-600 flex-shrink-0 mt-0.5">
-                    <X size={18} />
+                  <div className="text-red-400 mt-0.5">
+                    <X size={16} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-red-800">Connection Failed</p>
-                    <p className="text-sm text-red-600 mt-1">{error}</p>
+                  <div className="flex-1">
+                    <p className="text-sm text-red-400 font-medium leading-relaxed">{error}</p>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-        </div>
-
-        {/* Footer info */}
-        <div className="flex items-center justify-center gap-8 text-muted-foreground pt-4">
-          <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-            <Info size={16} />
-            <span className="text-xs font-bold uppercase tracking-wider">Technical Audit Mode</span>
-          </div>
-          <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity cursor-default">
-             <Search size={16} />
-             <span className="text-xs font-bold uppercase tracking-wider">DAX & Metadata Deep Scan</span>
-          </div>
-        </div>
-      </div>
+        </SpotlightCard>
+        
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="flex flex-col items-center justify-center space-y-4 mt-8"
+        >
+          <button 
+            onClick={() => {
+              // Quick mock model to test the UI
+              const mockModel = {
+                name: "Example Model",
+                tables: [
+                  {
+                    name: "Sales",
+                    columns: [{ name: "Date", dataType: "DateTime" }, { name: "Amount", dataType: "Decimal" }],
+                    measures: [{ name: "Total Sales", expression: "SUM(Sales[Amount])", isUsed: true }]
+                  }
+                ],
+                relationships: []
+              };
+              // Pass the mock model using a tricky hack since we don't have the prop.
+              // Wait, ConnectHub doesn't have a way to pass mock data except by calling onAnalyzeZip?
+              // The original had an onDrop mock. But we can just dispatch a custom event.
+              window.dispatchEvent(new CustomEvent('loadMockModel'));
+            }}
+            id="load-example-btn"
+            className="text-xs font-semibold uppercase tracking-widest text-primary hover:text-foreground transition-colors pressable"
+          >
+            Load Example Model
+          </button>
+          <p className="text-center text-xs text-muted-foreground">
+            Analysis occurs strictly in-memory. Zero data is persisted.
+          </p>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
+

@@ -151,7 +151,7 @@ export const CommandPalette = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[300] bg-background/80 backdrop-blur-xl flex items-start justify-center pt-[15vh] p-4"
+          className="fixed inset-0 z-[300] bg-background/80 backdrop-blur-xl flex items-start justify-center pt-[20vh] p-4"
           onClick={onClose}
         >
           <motion.div
@@ -159,21 +159,21 @@ export const CommandPalette = ({
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.95, y: -10 }}
             transition={{ duration: 0.15 }}
-            className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden"
+            className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-xl overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Search Input */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+            <div className="flex items-center gap-3 px-4 py-4 border-b border-border">
               <Search size={18} className="text-muted-foreground" />
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="Search tables, measures, columns, or type a command..."
-                className="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground"
+                className="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground text-foreground"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
               />
-              <kbd className="hidden sm:flex items-center gap-1 px-2 py-0.5 bg-secondary rounded text-[9px] text-muted-foreground font-mono border border-border">
+              <kbd className="hidden sm:flex items-center gap-1 px-2 py-0.5 bg-secondary rounded-md text-[10px] text-muted-foreground font-mono border border-border/50">
                 ESC
               </kbd>
             </div>
@@ -182,13 +182,13 @@ export const CommandPalette = ({
             <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
               {filtered.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
-                  <Search size={32} className="mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">No results for "{query}"</p>
+                  <Search size={32} className="mx-auto mb-3 opacity-30" />
+                  <p className="text-sm font-medium">No results for "{query}"</p>
                 </div>
               ) : (
                 grouped.map(group => (
                   <div key={group.category}>
-                    <div className="px-4 py-2 text-[9px] font-black text-muted-foreground uppercase tracking-widest bg-secondary/30">
+                    <div className="px-4 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest bg-secondary/30">
                       {categoryLabels[group.category] || group.category}
                     </div>
                     {group.items.map(item => {
@@ -200,8 +200,8 @@ export const CommandPalette = ({
                           onClick={item.action}
                           onMouseEnter={() => setSelectedIndex(currentIndex)}
                           className={cn(
-                            "w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors",
-                            isSelected ? "bg-primary/10 text-primary" : "text-foreground hover:bg-secondary"
+                            "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
+                            isSelected ? "bg-primary/10 text-primary" : "text-foreground hover:bg-secondary/50"
                           )}
                         >
                           <item.icon size={16} className={isSelected ? "text-primary" : "text-muted-foreground"} />
@@ -212,7 +212,7 @@ export const CommandPalette = ({
                             )}
                           </div>
                           {isSelected && (
-                            <kbd className="text-[9px] px-1.5 py-0.5 bg-primary/20 rounded font-mono">↵</kbd>
+                            <kbd className="text-[10px] px-2 py-0.5 bg-primary/20 rounded-md font-mono text-primary">↵</kbd>
                           )}
                         </button>
                       );
@@ -223,13 +223,13 @@ export const CommandPalette = ({
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-2 border-t border-border flex items-center justify-between text-[9px] text-muted-foreground">
+            <div className="px-4 py-3 border-t border-border flex items-center justify-between text-[10px] text-muted-foreground">
               <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-secondary rounded font-mono border border-border">↑↓</kbd> Navigate</span>
-                <span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-secondary rounded font-mono border border-border">↵</kbd> Select</span>
-                <span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-secondary rounded font-mono border border-border">Esc</kbd> Close</span>
+                <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-secondary rounded border border-border/50 font-mono">↑↓</kbd> Navigate</span>
+                <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-secondary rounded border border-border/50 font-mono">↵</kbd> Select</span>
+                <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-secondary rounded border border-border/50 font-mono">Esc</kbd> Close</span>
               </div>
-              <span className="font-bold">{filtered.length} results</span>
+              <span className="font-semibold">{filtered.length} results</span>
             </div>
           </motion.div>
         </motion.div>

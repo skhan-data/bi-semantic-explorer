@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { 
-  Database, Table as TableIcon, Zap, Hash, BarChart3, Layers, LayoutGrid
+  Database, Table as TableIcon, Zap, Hash, BarChart3, Layers, LayoutGrid, ArrowRight
 } from 'lucide-react';
 import { PBIModel, PBITable } from '../types';
-import { Badge } from './Badge';
 
 interface OverviewDashboardProps {
   model: PBIModel;
@@ -26,6 +25,20 @@ const getDomainName = (tableName: string) => {
   return 'General Model';
 };
 
+// Container variants for staggered children
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+};
+
 export const OverviewDashboard = ({ model, onNavigateToExplorer }: OverviewDashboardProps) => {
   const totalTables = model.tables.length;
   const totalMeasures = model.tables.reduce((acc, t) => acc + t.measures.length, 0);
@@ -42,94 +55,100 @@ export const OverviewDashboard = ({ model, onNavigateToExplorer }: OverviewDashb
       stats.measureCount += t.measures.length;
     });
     
-    // Convert to array and sort by importance (measures count, then table count)
     return Array.from(map.entries())
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.measureCount - a.measureCount || b.tables.length - a.tables.length);
   }, [model]);
 
   const kpis = [
-    { label: 'Total Measures', value: totalMeasures, icon: Zap, color: 'text-blue-500' },
-    { label: 'Total Tables', value: totalTables, icon: TableIcon, color: 'text-primary' },
-    { label: 'Total Columns', value: totalColumns, icon: Hash, color: 'text-orange-500' },
-    { label: 'Total Reports', value: totalReports, icon: BarChart3, color: 'text-emerald-500' },
+    { label: 'Total Measures', value: totalMeasures, icon: Zap },
+    { label: 'Total Tables', value: totalTables, icon: TableIcon },
+    { label: 'Total Columns', value: totalColumns, icon: Hash },
+    { label: 'Total Reports', value: totalReports, icon: BarChart3 },
   ];
 
   return (
-    <div className="space-y-8 pb-12">
+    <motion.div 
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="max-w-6xl mx-auto space-y-12 pb-12"
+    >
       {/* Executive Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 p-8 bg-card border border-border shadow-sm">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">{model.name} Overview</h2>
-          <p className="text-sm text-muted-foreground mt-1">Explore business domains and structural metrics across your semantic model.</p>
+      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-semibold tracking-tight text-foreground">{model.name} Overview</h2>
+          <p className="text-sm text-muted-foreground font-light max-w-[60ch]">
+            Explore business domains and structural metrics across your semantic model.
+          </p>
         </div>
         <button
           onClick={onNavigateToExplorer}
-          className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold text-sm tracking-widest hover:opacity-90 transition-all uppercase"
+          className="pressable flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-semibold text-sm rounded-lg hover:opacity-90 transition-all"
         >
           <Database size={16} />
           Explore Model
         </button>
-      </div>
+      </motion.div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <motion.div variants={container} className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {kpis.map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="p-6 bg-card border border-border shadow-sm flex items-center gap-4 hover:border-primary/50 transition-all"
+            variants={item}
+            className="p-6 bg-card border border-border/50 rounded-xl hover:border-border transition-colors flex flex-col gap-4"
           >
-            <div className={`w-12 h-12 bg-secondary flex items-center justify-center rounded-lg ${stat.color}`}>
-              <stat.icon size={24} />
+            <div className="w-10 h-10 bg-secondary flex items-center justify-center rounded-lg text-muted-foreground">
+              <stat.icon size={20} />
             </div>
             <div>
-               <h2 className="text-3xl font-bold leading-none">{stat.value}</h2>
-               <p className="text-xs text-muted-foreground font-medium mt-1">{stat.label}</p>
+               <h3 className="text-3xl font-medium tracking-tight leading-none text-foreground mb-1.5">{stat.value}</h3>
+               <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{stat.label}</p>
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Domains Grid */}
-      <div>
-        <div className="flex items-center gap-3 mb-6 px-2">
-           <LayoutGrid className="text-primary" size={20} />
-           <h3 className="text-lg font-black tracking-tight uppercase">Extracted Business Domains</h3>
+      <motion.div variants={item}>
+        <div className="flex items-center gap-3 mb-6 px-1">
+           <LayoutGrid className="text-muted-foreground" size={18} />
+           <h3 className="text-sm font-semibold tracking-wide text-foreground">EXTRACTED BUSINESS DOMAINS</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div variants={container} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {domains.map((domain, i) => (
             <motion.div
               key={domain.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.05 }}
+              variants={item}
+              whileHover={{ y: -2 }}
               onClick={onNavigateToExplorer}
-              className="cursor-pointer group p-6 bg-card border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex flex-col"
+              className="cursor-pointer group p-6 bg-card border border-border/50 rounded-xl hover:border-border transition-all flex flex-col justify-between min-h-[140px]"
             >
-              <div className="flex items-start justify-between mb-4">
-                <h4 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">{domain.name}</h4>
-                <div className="p-2 bg-secondary rounded-lg text-muted-foreground group-hover:text-primary transition-colors">
-                  <Layers size={18} />
+              <div className="flex items-start justify-between mb-6">
+                <h4 className="text-base font-medium tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  {domain.name}
+                </h4>
+                <div className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity group-hover:translate-x-1 group-hover:-translate-y-1 transform duration-300">
+                  <ArrowRight size={16} />
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 font-bold">
-                  {domain.tables.length} {domain.tables.length === 1 ? 'Table' : 'Tables'}
-                </Badge>
-                <div className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                  <Zap size={12} className="text-amber-500" />
-                  {domain.measureCount} Measures
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <TableIcon size={14} className="text-muted-foreground" />
+                  <span className="text-sm font-medium text-foreground">{domain.tables.length}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Zap size={14} className="text-muted-foreground" />
+                  <span className="text-sm font-medium text-foreground">{domain.measureCount}</span>
                 </div>
               </div>
             </motion.div>
           ))}
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };

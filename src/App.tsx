@@ -48,6 +48,9 @@ export default function App() {
   const [viewMode, setViewMode] = useState<'simple' | 'technical'>(
     () => (localStorage.getItem('biViewMode') as 'simple' | 'technical') || 'technical'
   );
+  const [theme, setTheme] = useState<'light' | 'dark'>(
+    () => (localStorage.getItem('biTheme') as 'light' | 'dark') || 'dark'
+  );
 
   const handleSetViewMode = (mode: 'simple' | 'technical') => {
     localStorage.setItem('biViewMode', mode);
@@ -57,6 +60,26 @@ export default function App() {
       setActiveTab('overview');
     }
   };
+
+  const handleSetTheme = (newTheme: 'light' | 'dark') => {
+    localStorage.setItem('biTheme', newTheme);
+    setTheme(newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  useEffect(() => {
+    // Apply initial theme
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showAuditConfigModal, setShowAuditConfigModal] = useState(false);
   const [auditVersion, setAuditVersion] = useState('1.0.0');
@@ -64,6 +87,32 @@ export default function App() {
 
   useEffect(() => {
     // App mounted
+    const handleMock = () => {
+      setModel({
+        name: 'Vercel Analytics Model',
+        tables: [
+          {
+            name: 'Sales',
+            columns: [
+              { name: 'Date', dataType: 'DateTime', isHidden: false, sourceColumn: 'Date' },
+              { name: 'Amount', dataType: 'Decimal', isHidden: false, sourceColumn: 'Amount' }
+            ],
+            measures: [
+              { name: 'Total Sales', expression: 'SUM(Sales[Amount])', isHidden: false, isUsed: true },
+              { name: 'YoY Growth', expression: 'CALCULATE([Total Sales], SAMEPERIODLASTYEAR(Calendar[Date]))', isHidden: false, isUsed: false }
+            ],
+            partitions: [],
+            isHidden: false,
+            storageMode: 'Import'
+          }
+        ],
+        relationships: []
+      });
+      setIsImported(true);
+      setActiveTab('explorer');
+    };
+    window.addEventListener('loadMockModel', handleMock);
+    return () => window.removeEventListener('loadMockModel', handleMock);
   }, []);
   const [showLocalSetup, setShowLocalSetup] = useState(false);
   const [projectPath, setProjectPath] = useState('');
@@ -557,6 +606,8 @@ export default function App() {
                 importLabel="Export Technical Docs"
                 viewMode={viewMode}
                 setViewMode={handleSetViewMode}
+                theme={theme}
+                setTheme={handleSetTheme}
               />
 
               <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative">

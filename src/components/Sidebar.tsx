@@ -18,25 +18,25 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, count, badge }: Sideb
   <button
     onClick={onClick}
     className={cn(
-      "w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200 group",
+      "w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200 group pressable",
       active
-        ? "bg-primary/10 text-primary font-medium"
-        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+        ? "bg-secondary text-foreground font-medium"
+        : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
     )}
   >
     <div className="flex items-center gap-3">
-      <Icon size={18} className={cn(active ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+      <Icon size={16} className={cn(active ? "text-foreground" : "text-muted-foreground group-hover:text-foreground")} />
       <span className="text-sm">{label}</span>
       {badge && (
-        <span className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
+        <span className="text-[10px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded bg-primary/20 text-primary">
           {badge}
         </span>
       )}
     </div>
     {count !== undefined && (
       <span className={cn(
-        "text-[10px] px-1.5 py-0.5 rounded-full border",
-        active ? "bg-primary/20 border-primary/30 text-primary" : "bg-secondary border-border text-muted-foreground"
+        "text-[10px] px-2 py-0.5 rounded-full font-mono",
+        active ? "bg-white/10 text-foreground" : "bg-transparent text-muted-foreground group-hover:text-foreground"
       )}>
         {count}
       </span>
@@ -74,20 +74,19 @@ export const Sidebar = ({
   viewMode,
 }: SidebarProps) => {
   return (
-    <aside className="w-72 bg-card border-r border-border flex flex-col h-screen sticky top-0">
+    <aside className="w-[260px] bg-background border-r border-border flex flex-col h-screen sticky top-0 z-20">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-          <Database size={22} />
+        <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center text-background">
+          <Database size={16} />
         </div>
         <div>
-          <h1 className="font-black text-lg tracking-tight leading-none text-white">BI Semantic Explorer</h1>
-          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mt-1">Semantic Model Intelligence</p>
+          <h1 className="font-semibold text-sm tracking-tight text-foreground">Semantic Explorer</h1>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6 custom-scrollbar">
         <div className="space-y-1">
-          <p className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Navigation</p>
+          <p className="px-3 text-xs font-medium text-muted-foreground mb-2">Workspace</p>
           <SidebarItem 
             icon={LayoutDashboard} 
             label={viewMode === 'simple' ? 'Summary' : 'Overview'}
@@ -97,7 +96,7 @@ export const Sidebar = ({
           />
           <SidebarItem 
             icon={TableIcon} 
-            label={viewMode === 'simple' ? 'Browse Data' : 'Semantic Explorer'}
+            label={viewMode === 'simple' ? 'Browse Data' : 'Explorer'}
             active={activeTab === 'explorer'} 
             onClick={() => setActiveTab('explorer')} 
             count={explorerCount}
@@ -126,7 +125,8 @@ export const Sidebar = ({
           )}
 
           {viewMode === 'technical' && (
-            <div className="pt-2 space-y-1">
+            <div className="pt-4 mt-4 border-t border-border/50 space-y-1">
+              <p className="px-3 text-xs font-medium text-muted-foreground mb-2">Tools</p>
               <SidebarItem 
                 icon={Database} 
                 label="Spring Cleaning" 
@@ -143,17 +143,17 @@ export const Sidebar = ({
           )}
         </div>
 
-        <div className="pt-4 border-t border-border space-y-4">
-          <p className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Active Source</p>
+        <div className="pt-4 border-t border-border/50 space-y-4">
+          <p className="px-3 text-xs font-medium text-muted-foreground mb-2">Environment</p>
           <div className="px-3 space-y-3">
             <div className="flex flex-col gap-2">
               <div className="relative group">
-                <Globe className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={14} />
+                <Globe className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                 <input
                   type="text"
                   readOnly
                   placeholder="X:\MyProject"
-                  className="w-full bg-secondary/50 border-border border rounded-lg py-2 pl-9 pr-3 text-[10px] focus:outline-none transition-all truncate text-muted-foreground pointer-events-none"
+                  className="w-full bg-secondary/50 border border-border rounded-md py-1.5 pl-8 pr-3 text-xs focus:outline-none transition-all truncate text-muted-foreground pointer-events-none"
                   value={projectPath}
                 />
               </div>
@@ -161,36 +161,24 @@ export const Sidebar = ({
             {onReset && (
               <button
                 onClick={onReset}
-                className="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all group border border-red-500/20"
+                className="w-full py-1.5 hover:bg-secondary text-muted-foreground hover:text-foreground rounded-md text-xs font-medium flex items-center gap-2 transition-all group pressable"
               >
                 <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
-                Reset session
+                Disconnect
               </button>
             )}
           </div>
         </div>
-
-        {/* Settings/System Section */}
-        <div className="pt-4 border-t border-border space-y-1">
-          <p className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Settings</p>
-          <button
-            onClick={() => setShowLocalSetup(true)}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-muted-foreground hover:bg-secondary hover:text-foreground"
-          >
-            <Settings size={18} />
-            <span className="text-sm">Application Settings</span>
-          </button>
-        </div>
       </div>
 
-      <div className="p-4 border-t border-border bg-secondary/30">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            SESSION MODE
-          </span>
-          <span className="font-mono text-[10px]">v1.2.0</span>
-        </div>
+      <div className="p-4 border-t border-border mt-auto">
+        <button
+          onClick={() => setShowLocalSetup(true)}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-muted-foreground hover:bg-secondary hover:text-foreground pressable"
+        >
+          <Settings size={16} />
+          <span className="text-sm font-medium">Settings</span>
+        </button>
       </div>
     </aside>
   );

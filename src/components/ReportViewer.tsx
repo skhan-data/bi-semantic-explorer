@@ -18,10 +18,10 @@ export const ReportViewer = ({
 }: ReportViewerProps) => {
   if (!reports || reports.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-border rounded-3xl bg-secondary/10">
+      <div className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-border/50 rounded-xl bg-secondary/10">
         <Layers size={48} className="text-muted-foreground mb-4 opacity-20" />
-        <h3 className="text-lg font-bold">No Report Definitions Found</h3>
-        <p className="text-sm text-muted-foreground max-w-sm lowercase"> ensure your project folder contains a .report subfolder with pbir definitions.</p>
+        <h3 className="text-base font-semibold text-foreground">No Report Definitions Found</h3>
+        <p className="text-sm font-medium text-muted-foreground max-w-sm mt-1">Ensure your project folder contains a .report subfolder with pbir definitions.</p>
       </div>
     );
   }
@@ -33,18 +33,18 @@ export const ReportViewer = ({
           key={report.name}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-8 bg-card border border-border rounded-3xl shadow-xl space-y-6"
+          className="p-8 bg-card border border-border/50 rounded-xl shadow-2xl space-y-8"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
                 <BarChart3 size={24} />
               </div>
               <div>
-                <h3 className="text-xl font-bold tracking-tight">{report.name}</h3>
-                <div className="flex items-center gap-2 mt-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">{report.name}</h3>
+                <div className="flex items-center gap-2 mt-1.5">
                   <Badge variant="outline">{report.pages.length} Pages</Badge>
-                  <span className="text-[10px] text-muted-foreground uppercase font-black">Visual Inventory Active</span>
+                  <span className="text-[10px] text-muted-foreground uppercase font-semibold tracking-widest">Visual Inventory</span>
                 </div>
               </div>
             </div>
@@ -60,27 +60,27 @@ export const ReportViewer = ({
                       key={`${page.name}-${vIdx}`}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="group p-5 bg-secondary/30 border border-border rounded-2xl hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5"
+                      className="group p-5 bg-secondary/30 border border-border/50 rounded-xl hover:border-primary/50 transition-colors hover:bg-secondary/50"
                     >
                       <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-background rounded-lg text-primary shadow-sm group-hover:scale-110 transition-transform">
+                        <div className="p-2 bg-background border border-border/50 rounded-lg text-primary shadow-sm group-hover:scale-110 transition-transform">
                           <BarChart3 size={16} />
                         </div>
                         <Badge variant="secondary">{visual.type}</Badge>
                       </div>
-                      <h4 className="font-bold text-sm mb-3 group-hover:text-primary transition-colors line-clamp-1">{visual.title || 'Untitled Visual'}</h4>
+                      <h4 className="font-medium text-sm mb-3 group-hover:text-primary transition-colors line-clamp-1 text-foreground">{visual.title || 'Untitled Visual'}</h4>
                       <div className="space-y-2">
-                         <p className="text-[10px] text-muted-foreground uppercase font-black flex items-center gap-1">
-                           <Layout size={10} />
+                         <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider flex items-center gap-1.5">
+                           <Layout size={12} />
                            Fields Used
                          </p>
-                         <div className="flex flex-wrap gap-1">
+                         <div className="flex flex-wrap gap-1.5">
                            {[...visual.usedMeasures, ...visual.usedColumns].map((field, fIdx) => (
-                             <span key={fIdx} className="px-2 py-0.5 bg-background border border-border rounded text-[10px] font-mono">
+                             <span key={fIdx} className="px-2 py-0.5 bg-background border border-border/50 rounded-md text-[10px] font-mono text-muted-foreground">
                                {field}
                              </span>
                            ))}
-                           {(visual.usedMeasures.length === 0 && visual.usedColumns.length === 0) && <span className="text-[10px] text-muted-foreground italic">No fields linked</span>}
+                           {(visual.usedMeasures.length === 0 && visual.usedColumns.length === 0) && <span className="text-[10px] text-muted-foreground italic font-medium">No fields linked</span>}
                          </div>
                       </div>
                     </motion.div>
@@ -89,8 +89,8 @@ export const ReportViewer = ({
               ))}
           </div>
 
-          {/* Report Page Tabs (Power BI Style) */}
-          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-xl border border-border self-start">
+          {/* Report Page Tabs */}
+          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg border border-border/50 self-start">
             {report.pages.map(page => {
               const isActive = activeReportPage === page.name || (activeReportPage === null && page.name === report.pages[0].name);
               return (
@@ -98,19 +98,13 @@ export const ReportViewer = ({
                   key={page.name}
                   onClick={() => setActiveReportPage(page.name)}
                   className={cn(
-                    "px-4 py-2 rounded-lg text-xs font-bold transition-all relative",
+                    "px-4 py-2 rounded-md text-sm font-medium transition-all relative pressable",
                     isActive
-                      ? "bg-background text-primary shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-background text-foreground shadow-sm border border-border/50"
+                      : "text-muted-foreground hover:text-foreground border border-transparent"
                   )}
                 >
                   {page.name}
-                  {isActive && (
-                    <motion.div
-                      layoutId="reportPageActive"
-                      className="absolute -bottom-1 left-4 right-4 h-0.5 bg-primary rounded-full"
-                    />
-                  )}
                 </button>
               );
             })}
